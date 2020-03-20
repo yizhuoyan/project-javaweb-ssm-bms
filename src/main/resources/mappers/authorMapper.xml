@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.AuthorDao">
+
+	<insert id="insert">
+		insert into book_Author(id,name,age,birthday,deadday,intro)
+		values(#{id},#{name},#{age},#{birthDay},#{deadDay},#{intro})
+	</insert>	
+	
+	<update id="update">
+		update book_Author set
+		name=#{name},
+		age=#{age},
+		birthday=#{birthDay},
+		deadDay=#{deadDay},
+		intro=#{intro}
+		where id=#{id}
+		
+	</update>
+	
+	<delete id="delete">
+		delete from book_Author where ${uk}=#{value}
+	</delete>
+	
+	<select id="select" resultMap="authorMap">
+		select * from book_Author where ${uk}=#{value}
+	</select>
+	<select id="selectById" resultMap="authorMap">
+		select * from book_Author where id=#{id}
+	</select>
+	<select id="selectByKey" resultMap="authorMap">
+		select * from book_Author 
+		<where>
+			<if test="key!=null">
+				name like #{key}
+				or intro like #{key} 
+			</if>
+		</where> 
+		order by name
+		
+	</select>
+	<resultMap type="entity.AuthorEntity" id="authorMap" autoMapping="true">
+		<id property="id" column="id" />
+		<collection property="books" column="id" select="dao.BookDao.selectByAuthor" fetchType="lazy"  ></collection>
+	</resultMap>
+	
+	
+
+</mapper>

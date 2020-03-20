@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.BookDao">
+
+	<insert id="insert">
+		insert into book_list(id,isbn,name,price,author_id)
+		values(#{id},#{isbn},#{name},#{price},#{author.id})
+	</insert>	
+	
+	<select id="select" resultMap="bookMap">
+		select * from book_list where ${uk}=#{value}
+	</select>
+	
+	
+	<select id="selectByAuthor" resultMap="bookMap">
+		select * from book_list where author_Id=#{authorId}
+	</select>
+	<resultMap type="entity.BookEntity" id="bookMap" autoMapping="true">
+		<id column="id" property="id"/>
+		<association property="author" column="author_Id" select="dao.AuthorDao.selectById" fetchType="lazy" ></association>
+	</resultMap>
+	
+</mapper>
